@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeMail Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=123">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <a class="brand" href="#dashboard">
+                <span class="safe-logo"><i></i></span>
+                <span>
+                    <strong>SafeMail</strong>
+                    <small data-i18n="brandSub">Spam Detection</small>
+                </span>
+            </a>
+
+            <nav class="nav">
+                <span data-i18n="navigation">Navigation</span>
+                <a class="active" href="#dashboard" data-i18n="navDashboard">Dashboard</a>
+                <a href="#single-panel" data-i18n="navSingle">Detect Message</a>
+                <a href="#csv-panel" data-i18n="navCsv">CSV Detection</a>
+                <a href="#history-panel" data-i18n="navHistory">History</a>
+                <a href="#trend-panel" data-i18n="navStats">Statistics</a>
+                <a href="#tools-panel" data-i18n="navTools">Tools</a>
+            </nav>
+
+            <div class="about-card">
+                <span data-i18n="about">About</span>
+                <p data-i18n="privacyText">This app uses your fine-tuned model to detect spam messages with confidence scores.</p>
+                <strong>BERT Model</strong>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div>
+                    <p data-i18n="subtitle">AI powered spam detection dashboard</p>
+                </div>
+                <div class="toolbar">
+                    <select id="languageSelect" aria-label="Language">
+                        <option value="en">English</option>
+                        <option value="fr">Francais</option>
+                        <option value="ar">العربية</option>
+                    </select>
+                    <button id="sampleButton" type="button" class="tool-btn" data-i18n="sampleCsv">Sample CSV</button>
+                    <button id="exportButton" type="button" class="tool-btn" data-i18n="exportCsv">Export</button>
+                    <button id="clearButton" type="button" class="tool-btn danger-text" data-i18n="clear">Clear</button>
+                </div>
+            </header>
+
+            <section id="dashboard" class="stats-grid">
+                <article class="stat-card purple">
+                    <span data-i18n="totalEmails">Total Scanned</span>
+                    <strong id="totalEmails">0</strong>
+                    <small data-i18n="totalHelp">Messages</small>
+                </article>
+                <article class="stat-card red">
+                    <span data-i18n="spam">Spam Detected</span>
+                    <strong id="spamEmails">0</strong>
+                    <small id="spamRate">0%</small>
+                </article>
+                <article class="stat-card green">
+                    <span data-i18n="ham">Ham Detected</span>
+                    <strong id="hamEmails">0</strong>
+                    <small id="hamRate">0%</small>
+                </article>
+                <article class="stat-card blue">
+                    <span data-i18n="avgConfidence">Accuracy</span>
+                    <strong id="avgConfidence">0%</strong>
+                    <small data-i18n="avgHelp">Model confidence</small>
+                </article>
+                <article class="stat-card amber">
+                    <span data-i18n="highRisk">High Risk</span>
+                    <strong id="highRisk">0</strong>
+                    <small data-i18n="highRiskHelp">Spam score above 80%</small>
+                </article>
+                <article class="stat-card">
+                    <span data-i18n="detectedColumn">Detected Column</span>
+                    <strong id="detectedColumn">-</strong>
+                    <small data-i18n="columnHelp">CSV text column</small>
+                </article>
+            </section>
+
+            <section class="hero-grid">
+                <article id="single-panel" class="panel single-panel">
+                    <div class="panel-head">
+                        <div>
+                            <h2 data-i18n="singleTitle">Detect Single Message</h2>
+                            <p data-i18n="singleText">Enter an email or message to analyze.</p>
+                        </div>
+                    </div>
+                    <form id="singleForm" class="single-form">
+                        <textarea id="messageInput" data-i18n-placeholder="singlePlaceholder" placeholder="Type or paste your message here..."></textarea>
+                        <button id="singleButton" type="submit" data-i18n="detectMessage">Detect Spam</button>
+                    </form>
+                    <div id="singleResult" class="single-result muted" data-i18n="singleWaiting">Waiting for a message.</div>
+                </article>
+
+                <article class="panel result-panel">
+                    <div class="panel-head">
+                        <div>
+                            <h2 data-i18n="resultPanelTitle">Detection Result</h2>
+                            <p id="resultSubtitle" data-i18n="singleWaiting">Waiting for a message.</p>
+                        </div>
+                    </div>
+                    <div class="result-content">
+                        <canvas id="confidenceChart" width="180" height="180"></canvas>
+                        <div class="result-copy">
+                            <strong id="resultLabel" class="result-label neutral">READY</strong>
+                            <p id="resultDescription">Paste a message to see the model decision.</p>
+                            <div class="bar-row">
+                                <span data-i18n="spamScore">Spam Probability</span>
+                                <b id="singleSpamScore">0%</b>
+                                <i><em id="singleSpamBar"></em></i>
+                            </div>
+                            <div class="bar-row">
+                                <span data-i18n="hamScore">Ham Probability</span>
+                                <b id="singleHamScore">0%</b>
+                                <i><em id="singleHamBar"></em></i>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="dashboard-grid">
+                <article id="csv-panel" class="panel">
+                    <div class="panel-head">
+                        <div>
+                            <h2 data-i18n="csvTitle">Detect Multiple Messages (CSV)</h2>
+                            <p data-i18n="csvText">Upload a CSV file containing emails or messages to analyze them in bulk.</p>
+                        </div>
+                    </div>
+                    <form id="csvForm" class="upload-box">
+                        <input id="csvFile" type="file" accept=".csv">
+                        <div>
+                            <strong data-i18n="uploadTitle">Drag and drop your CSV file here</strong>
+                            <span data-i18n="uploadHint">Supported columns: message, email, text, content, body</span>
+                        </div>
+                        <button id="csvButton" type="submit" data-i18n="analyzeCsv">Browse & Analyze</button>
+                    </form>
+                    <div id="csvNotice" class="notice" data-i18n="csvEmpty">No CSV analyzed yet.</div>
+                </article>
+
+                <article id="history-panel" class="panel history-panel">
+                    <div class="panel-head">
+                        <div>
+                            <h2 data-i18n="historyTitle">Recent History</h2>
+                            <p data-i18n="historyText">Latest analyzed messages.</p>
+                        </div>
+                    </div>
+                    <div id="historyList" class="history-list">
+                        <div class="empty-card" data-i18n="emptyHistory">No history yet.</div>
+                    </div>
+                </article>
+
+                <article id="trend-panel" class="panel trend-panel">
+                    <div class="panel-head">
+                        <div>
+                            <h2 data-i18n="trendTitle">Spam Detection Trend</h2>
+                            <p data-i18n="trendText">Spam and ham confidence across latest results.</p>
+                        </div>
+                    </div>
+                    <canvas id="trendChart" height="230"></canvas>
+                </article>
+            </section>
+
+            <section id="tools-panel" class="panel tools-panel">
+                <div class="panel-head">
+                    <div>
+                        <h2 data-i18n="toolsTitle">Analysis Tools</h2>
+                        <p data-i18n="toolsText">Filter, sort, search, copy summary, and export CSV results.</p>
+                    </div>
+                    <input id="resultSearch" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="Search results...">
+                </div>
+                <div class="tools-grid">
+                    <label>
+                        <span data-i18n="filterLabel">Result filter</span>
+                        <select id="resultFilter">
+                            <option value="ALL" data-i18n="all">All</option>
+                            <option value="SPAM" data-i18n="spam">Spam</option>
+                            <option value="HAM" data-i18n="ham">Ham</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span data-i18n="sortLabel">Sort by</span>
+                        <select id="sortSelect">
+                            <option value="row" data-i18n="sortRow">Row</option>
+                            <option value="spam" data-i18n="sortSpam">Spam score</option>
+                            <option value="ham" data-i18n="sortHam">Ham score</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span><span data-i18n="thresholdLabel">Min spam score</span> <b id="thresholdValue">0%</b></span>
+                        <input id="thresholdRange" type="range" min="0" max="100" value="0">
+                    </label>
+                    <button id="copySummaryButton" type="button" data-i18n="copySummary">Copy Summary</button>
+                </div>
+            </section>
+
+            <section id="results-panel" class="panel results-panel">
+                <div class="panel-head">
+                    <div>
+                        <h2 data-i18n="resultsTitle">CSV Results</h2>
+                        <p data-i18n="resultsText">Every row is classified with spam and ham confidence scores.</p>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-i18n="row">Row</th>
+                                <th data-i18n="preview">Preview</th>
+                                <th data-i18n="result">Result</th>
+                                <th data-i18n="spamScore">Spam Score</th>
+                                <th data-i18n="hamScore">Ham Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                            <tr>
+                                <td colspan="5" class="empty" data-i18n="emptyResults">Upload a CSV to see results.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js', v='30') }}"></script>
+</body>
+</html>
