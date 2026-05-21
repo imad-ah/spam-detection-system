@@ -6,7 +6,7 @@ An end-to-end Machine Learning and Deep Learning framework designed to detect sp
 
 ## 🚀 Live Demo
 You can try the fully deployed application directly through the link below:
-👉 **[Launch SafeMail Dashboard](https://pfe-spam-detection-spam-detection.hf.space)** *(Full-screen web application)*
+👉 **[Launch SafeMail Dashboard](https://pfe-spam-detection-spam-detection.hf.space)** *(Full-screen web application)*.
 
 ---
 
