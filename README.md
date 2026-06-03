@@ -1,3 +1,12 @@
+---
+title: Spam Detection
+emoji: 📧
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+---
+
 # 🛡️ SafeMail — AI-Powered Spam Detection System
 
 An end-to-end Machine Learning and Deep Learning framework designed to detect spam and malicious text messages (SMS) and emails. This project features a fully dynamic dashboard to analyze text inputs and predict content security in real-time.
