@@ -1,5 +1,6 @@
 import csv
 import io
+import os
 
 from flask import Flask, render_template, request, jsonify
 
@@ -275,5 +276,8 @@ def predict_csv():
 # =====================================================
 
 if __name__ == '__main__':
-
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(
+        host='0.0.0.0',
+        port=int(os.environ.get("PORT", 7860)),
+        debug=False
+    )
