@@ -2,3 +2,5 @@ flask
 torch
 transformers
 safetensors
+protobuf
+sentencepiece
