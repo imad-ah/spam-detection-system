@@ -18,6 +18,12 @@ const thresholdRange = document.querySelector("#thresholdRange");
 const thresholdValue = document.querySelector("#thresholdValue");
 const copySummaryButton = document.querySelector("#copySummaryButton");
 const historyList = document.querySelector("#historyList");
+const appShell = document.querySelector(".app");
+const sidebarToggle = document.querySelector("#sidebarToggle");
+const navLinks = [...document.querySelectorAll(".nav a[href^='#']")];
+const navSections = navLinks
+    .map((link) => document.querySelector(link.getAttribute("href")))
+    .filter(Boolean);
 
 const totalEmails = document.querySelector("#totalEmails");
 const spamEmails = document.querySelector("#spamEmails");
@@ -280,6 +286,8 @@ let currentLanguage = localStorage.getItem("safemail-language") || "en";
 let latestRows = [];
 let latestSummary = null;
 let singleState = { result: "READY", spam_score: 0, ham_score: 0 };
+let activeSectionId = "dashboard";
+let navScrollTicking = false;
 
 function t(key) {
     return i18n[currentLanguage][key] || i18n.en[key] || key;
@@ -297,6 +305,63 @@ function escapeHtml(value) {
         '"': "&quot;",
         "'": "&#039;"
     }[char]));
+}
+
+function setActiveSection(sectionId, updateHash = false) {
+    if (!sectionId || sectionId === activeSectionId) return;
+    activeSectionId = sectionId;
+    navLinks.forEach((link) => {
+        link.classList.toggle("active", link.getAttribute("href") === `#${sectionId}`);
+    });
+    if (updateHash && history.replaceState) {
+        history.replaceState(null, "", `#${sectionId}`);
+    }
+}
+
+function getSectionFromHash() {
+    const id = window.location.hash.slice(1);
+    return navSections.some((section) => section.id === id) ? id : "dashboard";
+}
+
+function syncActiveSectionFromScroll() {
+    const offset = window.innerHeight * 0.28;
+    const current = navSections.reduce((closest, section) => {
+        const top = section.getBoundingClientRect().top - offset;
+        if (top <= 0 && top > closest.top) return { id: section.id, top };
+        return closest;
+    }, { id: navSections[0]?.id || "dashboard", top: Number.NEGATIVE_INFINITY });
+    setActiveSection(current.id);
+}
+
+function initNavigation() {
+    const isCollapsed = localStorage.getItem("safemail-sidebar-collapsed") === "true";
+    appShell.classList.toggle("sidebar-collapsed", isCollapsed);
+    sidebarToggle.setAttribute("aria-expanded", String(!isCollapsed));
+    setActiveSection(getSectionFromHash());
+
+    navLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+            setActiveSection(link.getAttribute("href").slice(1));
+        });
+    });
+
+    sidebarToggle.addEventListener("click", () => {
+        const nextCollapsed = !appShell.classList.contains("sidebar-collapsed");
+        appShell.classList.toggle("sidebar-collapsed", nextCollapsed);
+        sidebarToggle.setAttribute("aria-expanded", String(!nextCollapsed));
+        localStorage.setItem("safemail-sidebar-collapsed", String(nextCollapsed));
+    });
+
+    window.addEventListener("hashchange", () => setActiveSection(getSectionFromHash()));
+    window.addEventListener("scroll", () => {
+        if (navScrollTicking) return;
+        navScrollTicking = true;
+        requestAnimationFrame(() => {
+            syncActiveSectionFromScroll();
+            navScrollTicking = false;
+        });
+    }, { passive: true });
+    syncActiveSectionFromScroll();
 }
 
 function applyLanguage(language) {
@@ -673,8 +738,10 @@ languageSelect.addEventListener("change", () => applyLanguage(languageSelect.val
 window.addEventListener("resize", () => {
     drawConfidence();
     drawTrend();
+    syncActiveSectionFromScroll();
 });
 
+initNavigation();
 applyLanguage(currentLanguage);
 renderHistory();
 drawConfidence();

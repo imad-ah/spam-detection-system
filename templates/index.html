@@ -7,11 +7,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=123">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=124">
 </head>
 <body>
     <div class="app">
         <aside class="sidebar">
+            <button id="sidebarToggle" class="sidebar-toggle" type="button" aria-label="Toggle navigation" title="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
             <a class="brand" href="#dashboard">
                 <span class="safe-logo"><i></i></span>
                 <span>
@@ -22,12 +27,12 @@
 
             <nav class="nav">
                 <span data-i18n="navigation">Navigation</span>
-                <a class="active" href="#dashboard" data-i18n="navDashboard">Dashboard</a>
-                <a href="#single-panel" data-i18n="navSingle">Detect Message</a>
-                <a href="#csv-panel" data-i18n="navCsv">CSV Detection</a>
-                <a href="#history-panel" data-i18n="navHistory">History</a>
-                <a href="#trend-panel" data-i18n="navStats">Statistics</a>
-                <a href="#tools-panel" data-i18n="navTools">Tools</a>
+                <a class="active" href="#dashboard" data-nav-icon="D" data-i18n="navDashboard">Dashboard</a>
+                <a href="#single-panel" data-nav-icon="M" data-i18n="navSingle">Detect Message</a>
+                <a href="#csv-panel" data-nav-icon="C" data-i18n="navCsv">CSV Detection</a>
+                <a href="#history-panel" data-nav-icon="H" data-i18n="navHistory">History</a>
+                <a href="#trend-panel" data-nav-icon="S" data-i18n="navStats">Statistics</a>
+                <a href="#tools-panel" data-nav-icon="T" data-i18n="navTools">Tools</a>
             </nav>
 
             <div class="about-card">
@@ -233,6 +238,6 @@
         </main>
     </div>
 
-    <script src="{{ url_for('static', filename='script.js', v='30') }}"></script>
+    <script src="{{ url_for('static', filename='script.js', v='31') }}"></script>
 </body>
 </html>
