@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=124">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=125">
 </head>
 <body>
     <div class="app">
@@ -26,13 +26,31 @@
             </a>
 
             <nav class="nav">
-                <span data-i18n="navigation">Navigation</span>
-                <a class="active" href="#dashboard" data-nav-icon="D" data-i18n="navDashboard">Dashboard</a>
-                <a href="#single-panel" data-nav-icon="M" data-i18n="navSingle">Detect Message</a>
-                <a href="#csv-panel" data-nav-icon="C" data-i18n="navCsv">CSV Detection</a>
-                <a href="#history-panel" data-nav-icon="H" data-i18n="navHistory">History</a>
-                <a href="#trend-panel" data-nav-icon="S" data-i18n="navStats">Statistics</a>
-                <a href="#tools-panel" data-nav-icon="T" data-i18n="navTools">Tools</a>
+                <span class="nav-label" data-i18n="navigation">Navigation</span>
+                <a class="active" href="#dashboard" title="Dashboard">
+                    <img src="{{ url_for('static', filename='logos/business-intelligence.png') }}" alt="" aria-hidden="true">
+                    <span class="nav-text" data-i18n="navDashboard">Dashboard</span>
+                </a>
+                <a href="#single-panel" title="Detect Message">
+                    <img src="{{ url_for('static', filename='logos/scanner.png') }}" alt="" aria-hidden="true">
+                    <span class="nav-text" data-i18n="navSingle">Detect Message</span>
+                </a>
+                <a href="#csv-panel" title="CSV Detection">
+                    <img src="{{ url_for('static', filename='logos/csv.png') }}" alt="" aria-hidden="true">
+                    <span class="nav-text" data-i18n="navCsv">CSV Detection</span>
+                </a>
+                <a href="#history-panel" title="History">
+                    <img src="{{ url_for('static', filename='logos/historical.png') }}" alt="" aria-hidden="true">
+                    <span class="nav-text" data-i18n="navHistory">History</span>
+                </a>
+                <a href="#trend-panel" title="Statistics">
+                    <img src="{{ url_for('static', filename='logos/inferential-statistics.png') }}" alt="" aria-hidden="true">
+                    <span class="nav-text" data-i18n="navStats">Statistics</span>
+                </a>
+                <a href="#tools-panel" title="Tools">
+                    <img src="{{ url_for('static', filename='logos/connection.png') }}" alt="" aria-hidden="true">
+                    <span class="nav-text" data-i18n="navTools">Tools</span>
+                </a>
             </nav>
 
             <div class="about-card">

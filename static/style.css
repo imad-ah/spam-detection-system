@@ -185,7 +185,7 @@ button {
     margin-top: 28px;
 }
 
-.nav span {
+.nav-label {
     margin: 8px 0 8px 10px;
     color: var(--purple);
     font-size: 12px;
@@ -196,12 +196,24 @@ button {
 .nav a {
     display: flex;
     align-items: center;
+    gap: 12px;
     min-height: 46px;
     padding: 0 14px;
     border-radius: 8px;
     color: #334155;
     font-weight: 700;
     text-decoration: none;
+}
+
+.nav a img {
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    object-fit: contain;
+}
+
+.nav-text {
+    line-height: 1.2;
 }
 
 .app.sidebar-collapsed .nav {
@@ -211,13 +223,16 @@ button {
 .app.sidebar-collapsed .nav a {
     justify-content: center;
     padding: 0;
-    font-size: 0;
 }
 
-.app.sidebar-collapsed .nav a::before {
-    content: attr(data-nav-icon);
-    font-size: 14px;
-    font-weight: 800;
+.app.sidebar-collapsed .nav a img {
+    width: 30px;
+    height: 30px;
+    flex-basis: 30px;
+}
+
+.app.sidebar-collapsed .nav-text {
+    display: none;
 }
 
 .nav a.active,
